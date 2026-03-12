@@ -13,8 +13,15 @@ async function getToken(clientId, clientSecret) {
   if (cachedToken && Date.now() < tokenExpiry - 60000) return cachedToken;
   const res = await fetch(TOKEN_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ client_id: clientId, client_secret: clientSecret }),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+    },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: clientId,
+      client_secret: clientSecret,
+    }),
   });
   if (!res.ok) {
     const text = await res.text();
